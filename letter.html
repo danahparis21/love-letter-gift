@@ -145,6 +145,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        -webkit-user-select: none;
         user-select: none;
         margin: 0;
       }
@@ -344,6 +345,7 @@
         padding: 2rem 1rem 1rem;
         cursor: grab;
         touch-action: none;
+        -webkit-user-select: none;
         user-select: none;
         transition: transform 0.3s ease;
         width: clamp(250px, 80vw, 600px);
@@ -449,12 +451,12 @@
       @media (max-width: 768px) {
         .letter {
           width: 80vw;
-          padding: 1.2rem;
+          padding: 1rem;
           font-size: 1rem;
         }
         #letter1 {
-          font-size: 1rem;
-          max-height: 50vh;
+          font-size: 0.8rem;
+          max-height: 40vh;
         }
         #letter2 {
           max-width: 150px;
@@ -462,6 +464,8 @@
         #letter3 {
           max-width: 250px;
         }
+        .envelope::before {
+        font-size: 2rem;
       }
 
       /* Hide scrollbars */
@@ -500,7 +504,7 @@
       }
 
       cite {
-        font-size: 1.25rem;
+        font-size: 1rem;
         display: block;
         margin-top: 1rem;
       }
@@ -549,11 +553,12 @@
         <blockquote class="letter" id="letter1">
           <button class="closeLetter" title="Close Amelia's letter"></button>
           <p>
-            From the moment our paths intertwined, you filled my days with
-            laughter and my nights with sweet dreams. Your love is a constant
-            melody that plays softly in my heart, making every moment magical.
+            Hi my husband!! Happy anniversary bebe! I love you sosos much, you are everything to me. This 4 years have been so fast, I just can’t get enough of u bebe. 
+            Let’s keep going for more and more years. You always make me so happy and safe. I can’t wait for use to be together, and have our lives together.
+            I can’t wait to go out on a date with u baby. You will always be my moon, and everything becomes alright when you are here.  
+            You make me feel so pretty and loved, and I will forever love you bebe.
           </p>
-          <cite>Amelia Rose</cite>
+          <cite>Your wifey, Danah Paris</cite>
         </blockquote>
       </div>
     </section>
