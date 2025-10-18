@@ -336,6 +336,12 @@
           height: 30px;
         }
       }
+      html,
+      body,
+      button,
+      .jar-container {
+        touch-action: manipulation;
+      }
     </style>
   </head>
   <body>
@@ -526,9 +532,7 @@
         }
       }, DRAIN_INTERVAL_MS);
 
-      checkButtonState();
-      updateFill(); // Initialize heart shapes
-      
+    
     </script>
   </body>
 </html>
