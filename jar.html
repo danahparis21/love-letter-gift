@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How Much Do You Love Me?</title>
+    <style>
+      @font-face {
+        font-family: "Aston Script";
+        src: url("aston script.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #ffeef4, #ffeef4);
+        text-align: center;
+        overflow: hidden;
+      }
+
+      /* RESPONSIVE TEXT */
+      h1 {
+        color: #926986;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+        font-family: "Aston Script", cursive;
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+        padding: 0 20px;
+      }
+
+      .jar-container {
+        position: relative;
+        width: 200px;
+        height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+      }
+
+      .jar {
+        position: relative;
+        width: 180px;
+        height: 250px;
+        border: 5px solid #ff8fab;
+        border-radius: 60px 60px 30px 30px;
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(255, 92, 141, 0.2);
+        z-index: 2;
+      }
+
+      .fill {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0%;
+        background: linear-gradient(180deg, #ff8fab, #ff5c8d);
+        transition: height 0.3s ease;
+        z-index: 1;
+      }
+
+      .heart-shape {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #fe487e;
+        transform: rotate(45deg);
+        animation: float 4s ease-in-out infinite;
+        z-index: 2;
+      }
+
+      .heart-shape:before,
+      .heart-shape:after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #fe487e;
+        border-radius: 50%;
+      }
+
+      .heart-shape:before {
+        top: -10px;
+        left: 0;
+      }
+
+      .heart-shape:after {
+        top: 0;
+        left: -10px;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: rotate(45deg) translateY(0);
+        }
+        50% {
+          transform: rotate(45deg) translateY(-5px);
+        }
+      }
+
+      .hearts {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 3;
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .buttons button {
+        width: 200px;
+      }
+
+      button {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.2rem;
+        color: #fff;
+        background-color: #ff5c8d;
+        box-shadow: 0 4px 10px rgba(255, 92, 141, 0.4);
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.3s;
+      }
+
+      button:hover:not(:disabled) {
+        transform: scale(1.05);
+      }
+
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      #nextPageBtn {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+        background-color: #faa3e2;
+      }
+
+      .message {
+        margin-top: 20px;
+        font-size: clamp(1rem, 4vw, 1.3rem);
+        color: #ff5c8d;
+        height: 40px;
+        padding: 0 20px;
+      }
+
+      .heart {
+        position: absolute;
+        color: #ff5c8d;
+        animation: floatUp 1.5s ease-out forwards;
+        font-size: 1.2rem;
+        z-index: 10;
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-150px) scale(1.5);
+          opacity: 0;
+        }
+      }
+
+      /* EXPLOSION CONTAINER - FIXES SCROLLING */
+      .explosion-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 100;
+        overflow: hidden;
+      }
+
+      .heart-explosion {
+        position: absolute;
+        font-size: 2rem;
+        color: #ff2e63;
+        animation: explode 1s ease-out forwards;
+        z-index: 10;
+      }
+
+      @keyframes explode {
+        0% {
+          transform: scale(0);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+
+      .firework {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        animation: firework 1s ease-out forwards;
+        z-index: 10;
+      }
+
+      @keyframes firework {
+        0% {
+          transform: translate(0, 0);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--tx), var(--ty));
+          opacity: 0;
+        }
+      }
+
+      .sparkle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: gold;
+        border-radius: 50%;
+        animation: sparkle 1s ease-out forwards;
+        z-index: 10;
+      }
+
+      @keyframes sparkle {
+        0% {
+          transform: scale(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1) rotate(180deg);
+          opacity: 0;
+        }
+      }
+
+      .heart-confetti {
+        position: absolute;
+        font-size: 1.5rem;
+        animation: heartConfettiFall 3s ease-out forwards;
+        z-index: 10;
+        top: -50px;
+      }
+
+      @keyframes heartConfettiFall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* MOBILE RESPONSIVENESS */
+      @media (max-width: 768px) {
+        .jar-container {
+          width: 180px;
+          height: 280px;
+        }
+
+        .jar {
+          width: 160px;
+          height: 230px;
+        }
+
+        .buttons button {
+          width: 180px;
+          padding: 10px 20px;
+          font-size: 1.1rem;
+        }
+
+        .message {
+          margin-top: 15px;
+          height: 35px;
+        }
+
+        /* Reduce explosion elements on mobile */
+        .heart-explosion {
+          font-size: 1.5rem;
+        }
+
+        .heart-confetti {
+          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .jar-container {
+          width: 150px;
+          height: 250px;
+        }
+
+        .jar {
+          width: 130px;
+          height: 200px;
+        }
+
+        .buttons button {
+          width: 160px;
+          padding: 8px 16px;
+          font-size: 1rem;
+        }
+
+        h1 {
+          margin-bottom: 15px;
+        }
+
+        .message {
+          margin-top: 10px;
+          height: 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>How much do you love me? 💕</h1>
+
+    <div class="jar-container">
+      <div class="jar">
+        <div class="fill" id="fill"></div>
+        <div class="hearts" id="hearts"></div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button id="addLoveBtn">♡ Fill Jar</button>
+      <button id="nextPageBtn">💌 Next Page</button>
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <!-- Explosion Container - Prevents scrolling -->
+    <div class="explosion-container" id="explosionContainer"></div>
+
+    <script>
+      const fill = document.getElementById("fill");
+      const hearts = document.getElementById("hearts");
+      const message = document.getElementById("message");
+      const addLoveBtn = document.getElementById("addLoveBtn");
+      const nextPageBtn = document.getElementById("nextPageBtn");
+      const explosionContainer = document.getElementById("explosionContainer");
+
+      let fillLevel = 0;
+      const DRAIN_AMOUNT = 3;
+      const DRAIN_INTERVAL_MS = 100;
+      let sadTimeout;
+      let heartShapes = [];
+
+      function updateFill() {
+        fillLevel = Math.max(0, Math.min(100, fillLevel));
+        fill.style.height = `${fillLevel}%`;
+
+        // Update heart shapes in the jar
+        updateHeartShapes();
+
+        checkButtonState();
+      }
+
+      function updateHeartShapes() {
+        // Remove excess heart shapes
+        while (heartShapes.length > Math.floor(fillLevel / 5)) {
+          const heart = heartShapes.pop();
+          if (heart && heart.parentNode) {
+            heart.parentNode.removeChild(heart);
+          }
+        }
+
+        // Add more heart shapes if needed
+        while (heartShapes.length < Math.floor(fillLevel / 5)) {
+          const heart = document.createElement("div");
+          heart.classList.add("heart-shape");
+
+          // Random position within the fill area
+          const maxTop = 250 - (fillLevel / 100) * 250 - 20;
+          const top = Math.random() * maxTop;
+          const left = Math.random() * 160;
+
+          heart.style.top = `${top}px`;
+          heart.style.left = `${left}px`;
+
+          // Random animation delay
+          heart.style.animationDelay = `${Math.random() * 2}s`;
+
+          fill.appendChild(heart);
+          heartShapes.push(heart);
+        }
+      }
+
+      function checkButtonState() {
+        if (fillLevel >= 100) {
+          nextPageBtn.style.opacity = 1;
+          nextPageBtn.style.pointerEvents = "auto";
+        } else {
+          nextPageBtn.style.opacity = 0;
+          nextPageBtn.style.pointerEvents = "none";
+        }
+      }
+
+      function showHeart() {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.style.left = Math.random() * 80 + 10 + "%";
+        heart.textContent = "❤️";
+        hearts.appendChild(heart);
+        setTimeout(() => heart.remove(), 1500);
+      }
+
+      function showExplosion() {
+        message.textContent = "I love you so much more!! ❤️❤️❤️";
+
+        // Adjust number of elements based on screen size
+        const isMobile = window.innerWidth <= 768;
+        const heartCount = isMobile ? 12 : 20;
+        const fireworkCount = isMobile ? 10 : 15;
+        const sparkleCount = isMobile ? 15 : 20;
+        const confettiCount = isMobile ? 20 : 30;
+
+        // Create heart explosions
+        for (let i = 0; i < heartCount; i++) {
+          const boom = document.createElement("div");
+          boom.classList.add("heart-explosion");
+          boom.textContent = "💖";
+          boom.style.left = Math.random() * 100 + "%";
+          boom.style.top = Math.random() * 100 + "%";
+          explosionContainer.appendChild(boom);
+          setTimeout(() => boom.remove(), 1000);
+        }
+
+        // Create fireworks
+        for (let i = 0; i < fireworkCount; i++) {
+          const firework = document.createElement("div");
+          firework.classList.add("firework");
+          firework.style.left = Math.random() * 100 + "%";
+          firework.style.top = Math.random() * 100 + "%";
+          firework.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
+
+          // Limit distance on mobile
+          const maxDistance = isMobile ? 80 : 100;
+          const angle = Math.random() * Math.PI * 2;
+          const distance = 30 + Math.random() * maxDistance;
+          firework.style.setProperty("--tx", `${Math.cos(angle) * distance}px`);
+          firework.style.setProperty("--ty", `${Math.sin(angle) * distance}px`);
+
+          explosionContainer.appendChild(firework);
+          setTimeout(() => firework.remove(), 1000);
+        }
+
+        // Create sparkles
+        for (let i = 0; i < sparkleCount; i++) {
+          const sparkle = document.createElement("div");
+          sparkle.classList.add("sparkle");
+          sparkle.style.left = Math.random() * 100 + "%";
+          sparkle.style.top = Math.random() * 100 + "%";
+          sparkle.style.animationDelay = `${Math.random() * 0.5}s`;
+          explosionContainer.appendChild(sparkle);
+          setTimeout(() => sparkle.remove(), 1000);
+        }
+
+        // Create heart confetti that falls from the top
+        for (let i = 0; i < confettiCount; i++) {
+          const heartConfetti = document.createElement("div");
+          heartConfetti.classList.add("heart-confetti");
+          heartConfetti.textContent = "💗";
+          heartConfetti.style.left = Math.random() * 100 + "%";
+          heartConfetti.style.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+          heartConfetti.style.animationDelay = `${Math.random() * 0.5}s`;
+          explosionContainer.appendChild(heartConfetti);
+          setTimeout(() => heartConfetti.remove(), 3000);
+        }
+      }
+
+      addLoveBtn.addEventListener("click", () => {
+        if (fillLevel < 100) {
+          fillLevel += 10;
+          updateFill();
+          showHeart();
+          message.textContent = "More, more, more💕";
+        } else {
+          showExplosion();
+          showHeart();
+        }
+
+        clearTimeout(sadTimeout);
+        sadTimeout = setTimeout(() => {
+          if (fillLevel < 100) message.textContent = "😢 Really? :c";
+        }, 3000);
+      });
+
+      nextPageBtn.addEventListener("click", () => {
+        window.location.href = "letter.html";
+      });
+
+      setInterval(() => {
+        if (fillLevel > 0 && fillLevel < 100) {
+          fillLevel -= DRAIN_AMOUNT;
+          updateFill();
+        } else if (fillLevel > 100) {
+          fillLevel = 100;
+          updateFill();
+        }
+      }, DRAIN_INTERVAL_MS);
+
+      checkButtonState();
+      updateFill(); // Initialize heart shapes
+    </script>
+  </body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Do You Love Me?</title>
+    <style>
+      /* ------------------------------------- */
+      /* 1. CUSTOM FONT DEFINITION             */
+      /* ------------------------------------- */
+      @font-face {
+        font-family: "Aston Script";
+        src: url("aston script.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #ffeef4, #ffeef4);
+        /* 2. APPLY THE NEW FONT */
+        font-family: "Aston Script", cursive;
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+      }
+
+      /* Glowing background animation */
+      .glow-effect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+      }
+
+      .glow-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.3) 0%,
+          rgba(255, 255, 255, 0) 70%
+        );
+        animation: floatGlow 15s infinite ease-in-out;
+        opacity: 0.6;
+      }
+
+      .glow-circle:nth-child(1) {
+        width: 300px;
+        height: 300px;
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .glow-circle:nth-child(2) {
+        width: 400px;
+        height: 400px;
+        top: 60%;
+        right: 10%;
+        animation-delay: -5s;
+      }
+
+      .glow-circle:nth-child(3) {
+        width: 250px;
+        height: 250px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: -10s;
+      }
+
+      @keyframes floatGlow {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+          opacity: 0.4;
+        }
+        50% {
+          transform: translateY(-20px) scale(1.1);
+          opacity: 0.7;
+        }
+      }
+
+      /* Floating hearts background - FIXED SCROLLING */
+      .floating-hearts {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        overflow: hidden; /* Prevent hearts from causing scroll */
+      }
+
+      .heart {
+        position: absolute;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 20px;
+        animation: floatHeart 20s infinite linear;
+        /* Ensure hearts stay within container */
+        transform: translateY(100vh);
+      }
+
+      @keyframes floatHeart {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.7;
+        }
+        90% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(-10px) rotate(360deg); /* Stop before top edge */
+          opacity: 0;
+        }
+      }
+
+      /* Pulsing background effect */
+      .pulse-effect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at center,
+          rgba(255, 182, 193, 0.4) 0%,
+          rgba(255, 237, 243, 0) 70%
+        );
+        animation: pulseBackground 8s infinite ease-in-out;
+        z-index: -2;
+      }
+
+      @keyframes pulseBackground {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(1.05);
+        }
+      }
+
+      h1 {
+        color: #926986;
+        font-size: 2rem;
+        margin: 20px 0;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        animation: textGlow 3s infinite alternate;
+        font-family: "Aston Script", cursive;
+      }
+
+      @keyframes textGlow {
+        0% {
+          text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        100% {
+          text-shadow: 2px 2px 15px rgba(255, 105, 180, 0.5);
+        }
+      }
+
+      img {
+        width: 200px;
+        border-radius: 10px;
+        filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.5));
+        animation: floatImage 4s infinite ease-in-out;
+      }
+
+      @keyframes floatImage {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* RESPONSIVE BUTTONS */
+      .buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 100px;
+        margin-top: 25px;
+        position: relative;
+        width: 600px;
+        height: 150px;
+      }
+
+      button {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.1s ease;
+        position: relative;
+        animation: buttonPulse 2s infinite;
+        font-family: "Aston Script", cursive;
+      }
+
+      @keyframes buttonPulse {
+        0%,
+        100% {
+          box-shadow: 0 4px 10px rgba(255, 102, 153, 0.4);
+        }
+        50% {
+          box-shadow: 0 4px 20px rgba(255, 102, 153, 0.7);
+        }
+      }
+
+      #yesBtn {
+        background-color: #ff6699;
+        color: white;
+        font-family: "Poppins", sans-serif;
+      }
+
+      #yesBtn:hover {
+        transform: scale(1.1);
+        animation: none;
+        box-shadow: 0 4px 25px rgba(255, 102, 153, 0.8);
+      }
+
+      #noBtn {
+        background-color: #999;
+        color: white;
+        z-index: 5;
+        position: relative;
+        transform: translate(0, 0);
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* MOBILE RESPONSIVENESS */
+      @media (max-width: 768px) {
+        body {
+          padding: 20px;
+          justify-content: flex-start;
+          padding-top: 10vh;
+        }
+
+        h1 {
+          font-size: 1.5rem;
+          margin: 15px 0;
+        }
+
+        img {
+          width: 150px;
+        }
+
+        .buttons {
+          flex-direction: column;
+          gap: 30px;
+          width: 100%;
+          height: auto;
+          margin-top: 30px;
+        }
+
+        button {
+          padding: 15px 40px;
+          font-size: 1.1rem;
+          width: 200px;
+        }
+
+        /* Adjust glow circles for mobile */
+        .glow-circle:nth-child(1) {
+          width: 200px;
+          height: 200px;
+          top: 5%;
+          left: 5%;
+        }
+
+        .glow-circle:nth-child(2) {
+          width: 250px;
+          height: 250px;
+          top: 70%;
+          right: 5%;
+        }
+
+        .glow-circle:nth-child(3) {
+          width: 180px;
+          height: 180px;
+          bottom: 10%;
+          left: 10%;
+        }
+
+        /* Reduce number of hearts on mobile */
+        .heart {
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        img {
+          width: 130px;
+        }
+
+        .buttons {
+          gap: 20px;
+        }
+
+        button {
+          padding: 12px 35px;
+          font-size: 1rem;
+          width: 180px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pulse-effect"></div>
+    <div class="glow-effect">
+      <div class="glow-circle"></div>
+      <div class="glow-circle"></div>
+      <div class="glow-circle"></div>
+    </div>
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <img src="images/dudu_bubu.gif" alt="Dudu Bubu Love Gif Sticker" />
+    <h1>Do you love me? 💕</h1>
+
+    <div class="buttons">
+      <button id="yesBtn" onclick="nextPage()">Yes 💖</button>
+      <button id="noBtn">No 💔</button>
+    </div>
+
+    <script>
+      const heartsContainer = document.getElementById("floatingHearts");
+      const hearts = ["💋", "💐", "💗", "🌷", "🌸"];
+
+      // Wait for the page to fully load before creating hearts
+      window.addEventListener("load", () => {
+        // Reduce number of hearts on mobile for better performance
+        const heartCount = window.innerWidth <= 768 ? 8 : 15;
+
+        for (let i = 0; i < heartCount; i++) {
+          setTimeout(() => {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.textContent =
+              hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = Math.random() * 100 + "%";
+            heart.style.animationDuration = 15 + Math.random() * 15 + "s";
+            heart.style.animationDelay = Math.random() * 5 + "s";
+
+            heartsContainer.appendChild(heart);
+          }, i * 300);
+        }
+      });
+
+      const noBtn = document.getElementById("noBtn");
+
+      // Make hover distance responsive
+      const getHoverDistance = () => (window.innerWidth <= 768 ? 100 : 150);
+      const getMoveStrength = () => (window.innerWidth <= 768 ? 100 : 150);
+
+      const getButtonCenter = (btn) => {
+        const rect = btn.getBoundingClientRect();
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      };
+
+      const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+      document.addEventListener("mousemove", (e) => {
+        const btnCenter = getButtonCenter(noBtn);
+        const distance = Math.hypot(
+          e.clientX - btnCenter.x,
+          e.clientY - btnCenter.y
+        );
+
+        const HOVER_DISTANCE = getHoverDistance();
+        const MOVE_STRENGTH = getMoveStrength();
+
+        if (distance < HOVER_DISTANCE) {
+          const dx = btnCenter.x - e.clientX;
+          const dy = btnCenter.y - e.clientY;
+          const angle = Math.atan2(dy, dx);
+          const moveFactor = 1 - distance / HOVER_DISTANCE;
+
+          const moveX = Math.cos(angle) * MOVE_STRENGTH * moveFactor;
+          const moveY = Math.sin(angle) * MOVE_STRENGTH * moveFactor;
+
+          // Adjust clamp values for mobile
+          const maxX = window.innerWidth <= 768 ? 150 : 200;
+          const maxY = window.innerWidth <= 768 ? 40 : 50;
+
+          const clampedX = clamp(moveX, -maxX, maxX);
+          const clampedY = clamp(moveY, -maxY, maxY);
+
+          noBtn.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
+        } else {
+          noBtn.style.transform = "translate(0, 0)";
+        }
+      });
+
+      function nextPage() {
+        window.location.href = "jar.html";
+      }
+    </script>
+  </body>
+</html>

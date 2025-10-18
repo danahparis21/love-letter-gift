@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Letter & Polaroid</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap");
+
+      @font-face {
+        font-family: "Aston Script";
+        src: url("aston script.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+      /* ------------------------------------- */
+      /* COLOR VARIABLES (Responsive base)     */
+      /* ------------------------------------- */
+      :root {
+        --envelope-x: 98vw;
+        --envelope-y: 70vw;
+        --envelope-bg: #ffdce6;
+        --envelope-shadow: #e09aa8;
+        --letter-x: 60vw;
+        --letter-y: 60vw;
+        --letter-bg: #fff8f7;
+        --letter-shadow: #f6d8db;
+        --letter-text: #4a0f1b;
+        --letter-font: "Dancing Script", serif;
+        --letter-button-text: #b2002a;
+        --heart-bg: #b2002a;
+        --heart-text: #fff;
+        --page-bg: #ffeef4;
+      }
+
+      /* Desktop size caps */
+      @media (min-width: 650px) {
+        :root {
+          --envelope-x: 700px;
+          --envelope-y: 500px;
+          --letter-x: 600px;
+          --letter-y: 400px;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--page-bg);
+        font-family: var(--letter-font);
+        overflow: hidden;
+      }
+
+      /* Glowing Background Effects */
+      .glow-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .glow-orb {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 182, 193, 0.4) 0%,
+          rgba(255, 237, 243, 0) 70%
+        );
+        animation: floatOrb 20s infinite ease-in-out;
+        opacity: 0.6;
+      }
+
+      .glow-orb:nth-child(1) {
+        width: 400px;
+        height: 400px;
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .glow-orb:nth-child(2) {
+        width: 300px;
+        height: 300px;
+        top: 60%;
+        right: 15%;
+        animation-delay: -7s;
+      }
+
+      .glow-orb:nth-child(3) {
+        width: 350px;
+        height: 350px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: -14s;
+      }
+
+      @keyframes floatOrb {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+          opacity: 0.4;
+        }
+        50% {
+          transform: translateY(-30px) scale(1.1);
+          opacity: 0.7;
+        }
+      }
+
+      .pulse-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at center,
+          rgba(255, 182, 193, 0.3) 0%,
+          rgba(255, 237, 243, 0) 70%
+        );
+        animation: pulseGlow 10s infinite ease-in-out;
+        z-index: -2;
+      }
+
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          opacity: 0.2;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(1.1);
+        }
+      }
+
+      .cssletter {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        margin: 0;
+      }
+
+      /* --- ENVELOPE STYLES with Animations --- */
+      .envelope {
+        position: relative;
+        width: var(--envelope-x);
+        height: var(--envelope-y);
+        background: var(--envelope-bg);
+        box-shadow: inset 0 0 30px -5px var(--envelope-shadow),
+          0 0 50vw 0 #ff87d9;
+        max-width: 90vw;
+        max-height: 60vh;
+        animation: envelopeGlow 4s infinite ease-in-out;
+      }
+
+      @keyframes envelopeGlow {
+        0%,
+        100% {
+          box-shadow: inset 0 0 30px -5px var(--envelope-shadow),
+            0 0 30px rgba(255, 135, 217, 0.6);
+        }
+        50% {
+          box-shadow: inset 0 0 30px -5px var(--envelope-shadow),
+            0 0 50px rgba(255, 135, 217, 0.9);
+        }
+      }
+
+      .envelope::before {
+        content: "˚ʚ❤︎ɞ˚";
+        font-size: 5rem;
+        color: white;
+        position: absolute;
+        left: 50%;
+        top: 30%;
+        transform: translate(-50%, -50%);
+        mix-blend-mode: soft-light;
+        animation: symbolPulse 3s infinite ease-in-out;
+      }
+
+      @keyframes symbolPulse {
+        0%,
+        100% {
+          opacity: 0.7;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+      }
+
+      .envelope-flap {
+        width: 100%;
+        height: 71%;
+        position: absolute;
+        top: 0;
+        z-index: 3;
+        overflow: hidden;
+        transition: 0.6s linear all;
+        transform-origin: top;
+        pointer-events: all;
+      }
+
+      .envelope-folds {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .envelope-flap::before,
+      .envelope-left::before,
+      .envelope-right::before,
+      .envelope-bottom::before {
+        content: "";
+        transform: rotate(45deg);
+        background: var(--envelope-bg);
+        box-shadow: 0 0 30px -5px var(--envelope-shadow);
+        width: 100%;
+        aspect-ratio: 1;
+        display: block;
+        position: absolute;
+        top: 60%;
+      }
+
+      .envelope-flap::before {
+        border-radius: 5rem;
+        bottom: 30px;
+        top: auto;
+      }
+
+      @media (min-width: 650px) {
+        .envelope-flap::before {
+          bottom: 100px;
+        }
+      }
+
+      .envelope-left::before {
+        top: 10%;
+        left: -65%;
+      }
+      .envelope-right::before {
+        top: 10%;
+        right: -65%;
+      }
+      .envelope-bottom::before {
+        top: 60%;
+        border-radius: 5rem;
+      }
+
+      .heart {
+        z-index: 4;
+        position: absolute;
+        border: none;
+        width: 70px;
+        aspect-ratio: 1;
+        background: radial-gradient(
+              circle at 60% 65%,
+              var(--heart-bg) 64%,
+              #0000 65%
+            )
+            top left/50% 50%,
+          radial-gradient(circle at 40% 65%, var(--heart-bg) 64%, #0000 65%) top
+            right/50% 50%,
+          conic-gradient(
+              from -45deg at 50% 85.5%,
+              var(--heart-bg) 90deg,
+              #0000 0
+            )
+            bottom/100% 50%;
+        background-repeat: no-repeat;
+        left: 50%;
+        top: 70%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        animation: heartBeat 2s infinite ease-in-out;
+      }
+
+      @keyframes heartBeat {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+      }
+
+      .heart-text {
+        transform: translateY(-10px);
+        display: block;
+        color: var(--heart-text);
+        font-size: 1.5rem;
+        font-family: var(--letter-font);
+        animation: textGlow 2s infinite alternate;
+      }
+
+      @keyframes textGlow {
+        0% {
+          text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        100% {
+          text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+        }
+      }
+
+      .envelope.active * {
+        pointer-events: none;
+      }
+
+      .envelope.active .envelope-flap {
+        transform: rotateX(-180deg);
+      }
+
+      .envelope.active .heart {
+        display: none;
+      }
+
+      /* --- LETTER STYLES with Animations --- */
+      .letter {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-sizing: border-box;
+        font-family: var(--letter-font);
+        background-color: var(--letter-bg);
+        color: var(--letter-text);
+        box-shadow: inset 0 0 20px -5px var(--letter-shadow);
+        border-radius: 12px;
+        text-align: center;
+        padding: 2rem 1rem 1rem;
+        cursor: grab;
+        touch-action: none;
+        user-select: none;
+        transition: transform 0.3s ease;
+        width: clamp(250px, 80vw, 600px);
+        height: auto;
+        max-height: 70vh;
+        overflow: auto;
+        animation: letterAppear 0.8s ease-out;
+      }
+
+      @keyframes letterAppear {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.8);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      /* ✅ Letter 1 (text) */
+      #letter1 {
+        font-size: clamp(1.1rem, 4vw, 2rem);
+        animation: letterGlow 3s infinite ease-in-out;
+      }
+
+      @keyframes letterGlow {
+        0%,
+        100% {
+          box-shadow: inset 0 0 20px -5px var(--letter-shadow),
+            0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        50% {
+          box-shadow: inset 0 0 20px -5px var(--letter-shadow),
+            0 5px 25px rgba(246, 216, 219, 0.6);
+        }
+      }
+
+      /* ✅ Letter 2 (polaroid) */
+      #letter2 {
+        width: clamp(150px, 55vw, 250px);
+        background: #fff;
+        color: #4a0f1b;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        animation: polaroidFloat 4s infinite ease-in-out;
+      }
+
+      @keyframes polaroidFloat {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) rotate(-1deg);
+        }
+        50% {
+          transform: translate(-50%, -50%) rotate(1deg);
+        }
+      }
+
+      /* ✅ Letter 3 (flower) */
+      #letter3 {
+        width: clamp(150px, 45vw, 250px);
+        background: transparent;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: none;
+        overflow: visible;
+        animation: flowerGlow 5s infinite ease-in-out;
+      }
+
+      @keyframes flowerGlow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 5px rgba(255, 182, 193, 0.5));
+        }
+        50% {
+          filter: drop-shadow(0 0 15px rgba(255, 182, 193, 0.8));
+        }
+        0%,
+        100% {
+          transform: translate(-50%, -50%) rotate(-1deg);
+        }
+        50% {
+          transform: translate(-50%, -50%) rotate(1deg);
+        }
+      }
+
+      /* Image sizing */
+      .polaroid img,
+      .flower img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 4px;
+      }
+
+      /* --- MOBILE --- */
+      @media (max-width: 768px) {
+        .letter {
+          width: 80vw;
+          padding: 1.2rem;
+          font-size: 1rem;
+        }
+        #letter1 {
+          font-size: 1rem;
+          max-height: 50vh;
+        }
+        #letter2 {
+          max-width: 150px;
+        }
+        #letter3 {
+          max-width: 250px;
+        }
+      }
+
+      /* Hide scrollbars */
+      .letter::-webkit-scrollbar {
+        display: none;
+      }
+      .letter {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .closeLetter {
+        position: absolute;
+        top: 0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: none;
+        border: 0;
+        animation: closeButtonPulse 2s infinite;
+      }
+
+      @keyframes closeButtonPulse {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .closeLetter::before {
+        content: "ʚ❤︎ɞ˚";
+        font-size: 1.5rem;
+        color: var(--letter-button-text);
+      }
+
+      cite {
+        font-size: 1.25rem;
+        display: block;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Glowing Background Elements -->
+    <div class="pulse-glow"></div>
+    <div class="glow-background">
+      <div class="glow-orb"></div>
+      <div class="glow-orb"></div>
+      <div class="glow-orb"></div>
+    </div>
+
+    <section class="cssletter">
+      <div class="envelope">
+        <button class="heart" id="openEnvelope" aria-label="Open Envelope">
+          <span class="heart-text">Open</span>
+        </button>
+        <div class="envelope-flap"></div>
+        <div class="envelope-folds">
+          <div class="envelope-left"></div>
+          <div class="envelope-right"></div>
+          <div class="envelope-bottom"></div>
+        </div>
+      </div>
+
+      <div class="letters">
+        <blockquote class="letter" id="letter2">
+          <button class="" title="Close polaroid"></button>
+          <div class="polaroid">
+            <img
+              src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=400&q=80"
+              alt="Our beautiful memory 💕"
+            />
+          </div>
+        </blockquote>
+        <blockquote class="letter" id="letter3">
+          <button class="" title="Close polaroid"></button>
+          <div class="flower">
+            <img src="images/flower.png" alt="flower" />
+          </div>
+        </blockquote>
+
+        <blockquote class="letter" id="letter1">
+          <button class="closeLetter" title="Close Amelia's letter"></button>
+          <p>
+            From the moment our paths intertwined, you filled my days with
+            laughter and my nights with sweet dreams. Your love is a constant
+            melody that plays softly in my heart, making every moment magical.
+          </p>
+          <cite>Amelia Rose</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <script>
+      // --- Universal Drag Logic (Combined Mouse & Touch) ---
+      const letters = document.querySelectorAll(".letter");
+      const lettersContainer = document.querySelector(".letters");
+      let zIndexCounter = 10;
+
+      const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      };
+
+      const shuffledThings = Array.from(letters);
+      shuffleArray(shuffledThings);
+
+      shuffledThings.forEach((letter) => {
+        lettersContainer.appendChild(letter);
+
+        // Get container width and letter width
+        const containerWidth = document.querySelector(".cssletter").offsetWidth;
+        const letterWidth = letter.offsetWidth;
+
+        // Check if mobile
+        if (window.innerWidth <= 768) {
+          // Center for mobile
+          letter.style.left = `40%`;
+          letter.style.top = `46%`;
+        } else {
+          // Desktop: keep original center logic
+          letter.style.left = `50%`;
+        }
+      });
+
+      letters.forEach((letter) => {
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        const getCoords = (e) => {
+          if (e.touches && e.touches.length > 0) {
+            return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+          }
+          return { x: e.clientX, y: e.clientY };
+        };
+
+        const startDrag = (e) => {
+          // Check if the target is NOT a button
+          if (e.target.tagName === "BUTTON" || e.target.closest("button")) {
+            return;
+          }
+
+          e.preventDefault();
+
+          isDragging = true;
+          const rect = letter.getBoundingClientRect();
+          const coords = getCoords(e);
+
+          letter.style.position = "absolute";
+          letter.style.zIndex = zIndexCounter++;
+
+          offsetX = coords.x - rect.left;
+          offsetY = coords.y - rect.top;
+
+          document.addEventListener("mousemove", onDrag);
+          document.addEventListener("mouseup", endDrag);
+          document.addEventListener("touchmove", onDrag, { passive: false });
+          document.addEventListener("touchend", endDrag);
+        };
+
+        const onDrag = (e) => {
+          if (!isDragging) return;
+          const coords = getCoords(e);
+          letter.style.left = `${coords.x - offsetX}px`;
+          letter.style.top = `${coords.y - offsetY}px`;
+        };
+
+        const endDrag = () => {
+          isDragging = false;
+          document.removeEventListener("mousemove", onDrag);
+          document.removeEventListener("mouseup", endDrag);
+          document.removeEventListener("touchmove", onDrag);
+          document.removeEventListener("touchend", endDrag);
+        };
+
+        letter.addEventListener("mousedown", startDrag);
+        letter.addEventListener("touchstart", startDrag, { passive: false });
+      });
+
+      document.querySelector("#openEnvelope").addEventListener("click", () => {
+        document.querySelector(".envelope").classList.add("active");
+      });
+
+      const closeButtons = document.querySelectorAll(".closeLetter");
+      closeButtons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+          e.preventDefault();
+          const letter = e.target.closest(".letter");
+          if (letter) letter.style.display = "none";
+        });
+      });
+    </script>
+  </body>
+</html>
